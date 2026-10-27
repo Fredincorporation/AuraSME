@@ -39,3 +39,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# pitch artifacts and reference mockups (not app source)
+/deck/
+/screens/
