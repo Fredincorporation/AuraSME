@@ -102,11 +102,67 @@
   background: #94a3b8;
 }
 
-/* Quote PDF export should print only the document body. */
+/*
+ * Quote PDF export ("Download official PDF" → window.print()). Turns the on-screen
+ * summary into a clean A4 document: drop app chrome, use the full page, and force the
+ * brand/status colors and section tints to render (browsers skip backgrounds by default,
+ * which is what made the export look like a flat page snapshot).
+ */
 @media print {
+  @page {
+    size: A4;
+    margin: 15mm 13mm;
+  }
+
+  html,
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+
+  body {
+    min-height: 0 !important;
+    display: block !important;
+  }
 
   header,
   [data-print-hide] {
     display: none !important;
+  }
+
+  main {
+    padding-top: 0 !important;
+  }
+
+  /* Let the quote fill the page instead of the centered app shell. */
+  [data-print-shell] {
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Document sections, not floating UI panels. */
+  [data-print-shell] * {
+    box-shadow: none !important;
+  }
+
+  /* Pagination that keeps the schedule and totals readable across pages. */
+  table {
+    break-inside: auto;
+  }
+  thead {
+    display: table-header-group;
+  }
+  tr,
+  [data-print-avoid] {
+    break-inside: avoid;
+  }
+  h3 {
+    break-after: avoid;
   }
 }

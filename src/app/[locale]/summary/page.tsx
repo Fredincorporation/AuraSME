@@ -81,7 +81,7 @@ export default function QuoteSummaryPage() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6 pb-28">
+    <div data-print-shell className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6 pb-28">
       <WorkflowStepper current="summary" />
 
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -94,7 +94,7 @@ export default function QuoteSummaryPage() {
           <p className="text-sm text-slate-500 mt-0.5">{t('subtitle')}</p>
         </div>
 
-        <div className="flex items-center gap-2.5">
+        <div data-print-hide className="flex items-center gap-2.5">
           <Link href="/lifecycle" className="px-3 py-2 bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 rounded-xl text-sm font-semibold flex items-center gap-1.5">
             <GitCompare className="w-4 h-4 text-slate-500" />
             {t('versionDiff')}
@@ -191,7 +191,7 @@ export default function QuoteSummaryPage() {
           </table>
         </div>
 
-        <div className="p-6 rounded-2xl bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200/80 space-y-2">
+        <div data-print-avoid className="p-6 rounded-2xl bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200/80 space-y-2">
           <div className="grid grid-cols-2 text-sm">
             <span className="text-slate-600">{t('netAnnual')}</span>
             <span className="text-end font-semibold">AED {Math.round(pricing.netAnnual).toLocaleString()}</span>

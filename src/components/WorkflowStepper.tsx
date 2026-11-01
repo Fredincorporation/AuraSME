@@ -22,7 +22,7 @@ export const WorkflowStepper = ({ current }: WorkflowStepperProps) => {
   const currentIndex = STEP_ORDER.indexOf(current);
 
   return (
-    <div className="w-full bg-surface rounded-xl border-border shadow-layer-1 p-4">
+    <div data-print-hide className="w-full bg-surface rounded-xl border-border shadow-layer-1 p-4">
       <ol className="flex items-center justify-between max-w-4xl mx-auto">
         {STEP_ORDER.map((step, index) => {
           const isComplete = index < currentIndex;
