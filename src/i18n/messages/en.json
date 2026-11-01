@@ -618,6 +618,8 @@
     "unknownReply": "I can fix records (\"fix Zainab\"), summarize issues (\"show issues\"), or report status (\"status\"). Replies are powered by the rule engine; the Groq LLM activates automatically when GROQ_API_KEY is configured.",
     "placeholder": "Type: 'fix <name>', 'status', or 'show issues'...",
     "offline": "Copilot offline — check the server.",
+    "authRequired": "Please sign in to use the copilot.",
+    "rateLimited": "That was quick — the copilot is rate-limited. Try again in a moment.",
     "listening": "Listening… (Web Speech API)",
     "voiceUnsupported": "Voice input not supported in this browser.",
     "voiceNote": "Voice note",

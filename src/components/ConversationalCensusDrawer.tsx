@@ -13,6 +13,14 @@ interface Msg {
   actions?: { label: string; run: () => void }[];
 }
 
+// Carries the HTTP status so the UI can tell "sign in / rate limited" apart from a genuine
+// server-down network failure, instead of blaming the server for every non-2xx.
+class HttpError extends Error {
+  constructor(readonly status: number) {
+    super(String(status));
+  }
+}
+
 export const ConversationalCensusDrawer = () => {
   const t = useTranslations('Copilot');
   const tc = useTranslations('Census');
@@ -26,6 +34,14 @@ export const ConversationalCensusDrawer = () => {
   const startedRef = useRef<string | null>(null);
   const stats = censusStats(census);
 
+  const copilotErrorText = (err: unknown): string => {
+    if (err instanceof HttpError) {
+      if (err.status === 401) return t('authRequired');
+      if (err.status === 429) return t('rateLimited');
+    }
+    return t('offline');
+  };
+
   const startAnalysis = async () => {
     if (census.length === 0) return;
     startedRef.current = lastParsedAt;
@@ -36,7 +52,7 @@ export const ConversationalCensusDrawer = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ members: census, locale }),
       });
-      if (!res.ok) throw new Error(String(res.status));
+      if (!res.ok) throw new HttpError(res.status);
       const data = await res.json();
       setProvider(data.provider);
       const autoFixable = data.analysis.autoFixable as { memberId: string; name: string; fix: string }[];
@@ -59,8 +75,8 @@ export const ConversationalCensusDrawer = () => {
               : undefined,
         },
       ]);
-    } catch {
-      setMessages((prev) => [...prev, { sender: 'ai', text: t('offline') }]);
+    } catch (err) {
+      setMessages((prev) => [...prev, { sender: 'ai', text: copilotErrorText(err) }]);
       startedRef.current = null;
     } finally {
       setAnalyzing(false);
@@ -93,12 +109,12 @@ export const ConversationalCensusDrawer = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: text, members: census, config: activeConfig, locale }),
       });
-      if (!res.ok) throw new Error(String(res.status));
+      if (!res.ok) throw new HttpError(res.status);
       const data = await res.json();
       setProvider(data.provider);
       setMessages((prev) => [...prev, { sender: 'ai', text: data.reply }]);
-    } catch {
-      setMessages((prev) => [...prev, { sender: 'ai', text: t('offline') }]);
+    } catch (err) {
+      setMessages((prev) => [...prev, { sender: 'ai', text: copilotErrorText(err) }]);
     }
   };
 
